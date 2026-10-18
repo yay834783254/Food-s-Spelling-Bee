@@ -1,0 +1,227 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public player profile and career statistics for Food's Spelling Bee (no PII).",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the player.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Public handle displayed on leaderboards.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "titleBadge": {
+          "type": "string",
+          "description": "Earned culinary-lexical rank badge.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "bestWpm": {
+          "type": "number",
+          "description": "Career highest WPM achieved on a single word."
+        },
+        "bestWord": {
+          "type": "string",
+          "description": "The word on which the player achieved their career highest WPM.",
+          "minLength": 1,
+          "maxLength": 45
+        },
+        "totalWordsSpelled": {
+          "type": "number",
+          "description": "Cumulative words spelled accurately."
+        },
+        "totalScore": {
+          "type": "number",
+          "description": "Cumulative points earned across spelling bee runs."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of profile creation."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of most recent profile update."
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "titleBadge",
+        "bestWpm",
+        "bestWord",
+        "totalWordsSpelled",
+        "totalScore",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Immutable record of a completed spelling run or high-speed word performance.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the player.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Public handle of the player.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "titleBadge": {
+          "type": "string",
+          "description": "Player rank title.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "wpm": {
+          "type": "number",
+          "description": "Average WPM across the run."
+        },
+        "peakWpm": {
+          "type": "number",
+          "description": "Highest single-word WPM achieved during this run."
+        },
+        "fastestWord": {
+          "type": "string",
+          "description": "The word spelled with the highest WPM in this run.",
+          "minLength": 2,
+          "maxLength": 45
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Difficulty tier of the run.",
+          "enum": ["easy", "medium", "hard", "verylong", "progressive"]
+        },
+        "score": {
+          "type": "number",
+          "description": "Total run score."
+        },
+        "wordsSpelled": {
+          "type": "number",
+          "description": "Number of words spelled correctly in the run."
+        },
+        "accuracy": {
+          "type": "number",
+          "description": "Accuracy percentage (0 to 100)."
+        },
+        "playedAtMs": {
+          "type": "number",
+          "description": "Epoch milliseconds for time-window filtering (day/week/month/year/all-time)."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of entry creation."
+        }
+      },
+      "required": [
+        "userId",
+        "displayName",
+        "titleBadge",
+        "wpm",
+        "peakWpm",
+        "fastestWord",
+        "difficulty",
+        "score",
+        "wordsSpelled",
+        "accuracy",
+        "playedAtMs",
+        "createdAt"
+      ]
+    },
+    "WordRecord": {
+      "title": "WordRecord",
+      "description": "Global record for the highest WPM achieved on a specific word.",
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "description": "The target word spelled.",
+          "minLength": 2,
+          "maxLength": 45
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Difficulty category of the word.",
+          "enum": ["easy", "medium", "hard", "verylong"]
+        },
+        "wpm": {
+          "type": "number",
+          "description": "Highest WPM ever recorded on this word."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the record holder.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Public handle of the record holder.",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "charCount": {
+          "type": "number",
+          "description": "Character length of the word."
+        },
+        "durationMs": {
+          "type": "number",
+          "description": "Milliseconds taken to type the word."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when this record was set."
+        }
+      },
+      "required": [
+        "word",
+        "difficulty",
+        "wpm",
+        "userId",
+        "displayName",
+        "charCount",
+        "durationMs",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProfile"
+      },
+      "description": "Public player profile and career statistics."
+    },
+    "/leaderboard_entries/{entryId}": {
+      "schema": {
+        "$ref": "#/entities/LeaderboardEntry"
+      },
+      "description": "Global leaderboard run entries filtered by Today, This Week, This Month, This Year, and All Time."
+    },
+    "/word_records/{wordId}": {
+      "schema": {
+        "$ref": "#/entities/WordRecord"
+      },
+      "description": "Highest WPM records per specific word."
+    }
+  }
+}

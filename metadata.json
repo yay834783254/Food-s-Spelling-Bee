@@ -1,0 +1,6 @@
+{
+  "name": "Food's Spelling Bee",
+  "description": "Competitive audio-driven spelling bee and typing speed arena featuring easy to ultra-long words, real-time WPM tracking, and global leaderboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
